@@ -1,0 +1,67 @@
+# ===============================================
+# General Python
+# ===============================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Distribution / Packaging
+.Python
+build/
+dist/
+wheels/
+*.egg-info/
+htmlcov/
+.tox/
+
+# ===============================================
+# Virtual Environment
+# ===============================================
+# The virtual environment folder itself
+.venv/
+venv/
+env/
+/bin/
+/lib/
+/include/
+
+# ===============================================
+# IDE and Editor Files
+# ===============================================
+# Visual Studio Code
+.vscode/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# ===============================================
+# Data and RAG Components (CRITICAL for this project)
+# ===============================================
+
+# 1. RAG Vector Store (ChromaDB)
+# DO NOT commit your indexed data, it can be huge and is built locally.
+chroma_db/
+.chroma/
+
+# 2. Local RAG Model Downloads (HuggingFace/LlamaIndex)
+# These are the files downloaded for the local BGE embedding model.
+# Typically stored in the user's home directory or a cache folder.
+.cache/
+llama_index_cache/
+.llama_index/
+sentence_transformers/
+
+# 3. Local Data (Your PDFs)
+# While the PDFs themselves are source material, the /data folder 
+# should generally be ignored if the files are large or managed separately.
+# NOTE: If you want to commit the small manual PDFs, remove the line below.
+# For this RAG project, it's often best to keep the PDFs in the repo 
+# so others can easily rebuild the index. I will comment this out.
+# data/
+
+# 4. Agent Development Kit (ADK)
+# ADK often generates run files and logs.
+*.log
+.adk_run/
