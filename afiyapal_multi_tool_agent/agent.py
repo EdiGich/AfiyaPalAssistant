@@ -1,8 +1,10 @@
-# agent.py
+# afiyapal_multi_tool_agent/agent.py
 
-from google.adk.agents import Agent, LlmAgent
+from google.adk.agents import LlmAgent
 from google.adk.tools import AgentTool
-from rag_tool import first_aid_rag_search # <--- Import the RAG tool
+# This import executes the top-level code in rag_tool.py (loading the index)
+# and brings the function 'first_aid_rag_search' into scope.
+from .rag_tool import first_aid_rag_search 
 
 # =================================================================
 # 1. First Aid Expert Agent (The Sub-Agent)
@@ -11,7 +13,7 @@ from rag_tool import first_aid_rag_search # <--- Import the RAG tool
 # Define the First Aid Sub-Agent
 first_aid_expert_agent = LlmAgent(
     name="FirstAidExpertAgent",
-    model="gemini-2.0-flash", 
+    model="gemini-2.5-flash", 
     description=(
         "A highly specialized agent for providing detailed, professional, and "
         "reference-based first aid advice for common injuries. You MUST use "
@@ -22,9 +24,10 @@ first_aid_expert_agent = LlmAgent(
         "Your sole role is to provide step-by-step, professional first aid instructions. "
         "ALWAYS follow the procedure from the RETRIEVED KNOWLEDGE. If the search returns "
         "context, use that context (the procedures from the books) as the basis of your reply. "
-        "Present the information found in a clear, numbered, professional format."
+        "Present the information found in a clear, numbered, professional format. "
+        "If the search fails or returns empty context, state clearly that you are using general knowledge."
     ),
-    # Connect the RAG function as a tool
+    # The agent is connected directly to the imported function
     tools=[first_aid_rag_search],
 )
 
@@ -40,7 +43,7 @@ first_aid_tool = AgentTool(first_aid_expert_agent)
 # Define the Health Coordinator (Root) Agent
 root_agent = LlmAgent(
     name="HealthCoordinatorAgent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=(
         "The primary professional Health Assistant. This agent handles all mental "
         "health guidance, counseling, and triage of health questions."
@@ -55,6 +58,3 @@ root_agent = LlmAgent(
     # Connect the sub-agent as a tool
     tools=[first_aid_tool],
 )
-
-# Keep the default agent definition for running (ADK uses the last defined Agent as default if no name is specified)
-# You can remove the old get_weather and get_current_time functions as they are no longer used.
