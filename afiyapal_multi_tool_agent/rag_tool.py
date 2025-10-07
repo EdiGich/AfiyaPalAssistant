@@ -92,10 +92,10 @@ def load_or_build_index():
         print("!!! First-Aid Index not found. Building index now... !!!")
         retriever = build_first_aid_index()
         if retriever:
-             print("Index build successful. Proceeding with the retriever.")
+             print("First Aid Index build successful. Proceeding with the retriever.")
         return retriever
     except Exception as e:
-        print(f"An unexpected error occurred during index check: {e}")
+        print(f"An unexpected error occurred during first aid index check: {e}")
         return None
 
 # --- CRITICAL: INITIALIZE THE GLOBAL RETRIEVER ON IMPORT ---

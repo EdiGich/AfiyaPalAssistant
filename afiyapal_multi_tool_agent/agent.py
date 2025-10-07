@@ -5,12 +5,12 @@ from google.adk.tools import AgentTool
 # This import executes the top-level code in rag_tool.py (loading the index)
 # and brings the function 'first_aid_rag_search' into scope.
 from .rag_tool import first_aid_rag_search 
+from .merck_tool import merck_manual_rag_search
 
 # =================================================================
-# 1. First Aid Expert Agent (The Sub-Agent)
+# 1. First Aid Expert Agent (1st Sub-agent)
 # =================================================================
 
-# Define the First Aid Sub-Agent
 first_aid_expert_agent = LlmAgent(
     name="FirstAidExpertAgent",
     model="gemini-2.5-flash", 
@@ -31,6 +31,19 @@ first_aid_expert_agent = LlmAgent(
     tools=[first_aid_rag_search],
 )
 
+# ======================================================================
+# 2. Medical Reference Agent (2nd Sub-agent)
+# ======================================================================
+# Defining the agent
+medical_reference_agent = LlmAgent(
+    name="MedicalReferenceAgent",
+    model="gemini-2.5-flash",
+    description=(
+        "An expert egent fro diagnosing conditions and providing detailed medical"
+        "information based on the Merck Manual of Diagnostics and Therapy."
+    ),
+    tools=[merck_manual_rag_search],
+)
 
 # =================================================================
 # 2. Health Coordinator Agent (The Root Agent)
@@ -38,6 +51,7 @@ first_aid_expert_agent = LlmAgent(
 
 # Wrap the sub-agent as a tool for the root agent
 first_aid_tool = AgentTool(first_aid_expert_agent)
+merck_reference_tool = AgentTool(medical_reference_agent)
 
 
 # Define the Health Coordinator (Root) Agent
@@ -53,8 +67,9 @@ root_agent = LlmAgent(
         "1. For mental health and counseling questions, provide empathetic, non-diagnostic guidance, always "
         "recommending consulting a professional for serious issues. "
         "2. For ALL first aid or injury-related questions (e.g., 'cut finger', 'sprained ankle', 'burn'), you MUST delegate the question to the 'FirstAidExpertAgent' tool. "
-        "3. Maintain a professional, detailed, and non-alarmist tone at all times."
+        "3. For ALL **general medical questions, symptoms, or disease reference** (e.g., 'What is hypertension?', 'causes of fever'), you MUST delegate to the **'MedicalReferenceAgent'** tool."
+        "4. Maintain a professional, detailed, and non-alarmist tone at all times."
     ),
     # Connect the sub-agent as a tool
-    tools=[first_aid_tool],
+    tools=[first_aid_tool, merck_reference_tool],
 )
