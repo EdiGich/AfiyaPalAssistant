@@ -109,27 +109,27 @@ MERCK_MANUAL_RETRIEVER = load_or_build_index()
 
 def merck_manual_rag_search(query: str) -> str:
     """
-    SEARCHES the First Aid Knowledge Base for relevant text chunks.
+    SEARCHES the Merck Manual Knowledge Base for relevant text chunks.
     This function is exported and used as a tool by the Agent.
     """
     global MERCK_MANUAL_RETRIEVER # Reference the global variable initialized above
 
     if MERCK_MANUAL_RETRIEVER is None:
-        return "RAG TOOL INIT ERROR: First Aid Knowledge Base failed to initialize. Cannot retrieve context."
+        return "RAG TOOL INIT ERROR: Merck Manual Knowledge Base failed to initialize. Cannot retrieve context."
     
     try:
         nodes = MERCK_MANUAL_RETRIEVER.retrieve(query)
         
         if not nodes:
             # RAG ran, but found no matches. Instruct the LLM to use general knowledge.
-            return f"RETRIEVAL FAILED: No specific first aid context found for query: '{query}'. Respond using general medical knowledge."
+            return f"RETRIEVAL FAILED: No specific Merck Manual context found for query: '{query}'. Respond using general medical knowledge."
 
         retrieved_context = "\n---\n".join([n.get_text() for n in nodes])
         
-        return f"RETRIEVED KNOWLEDGE FROM FIRST AID MANUALS:\n{retrieved_context}"
+        return f"RETRIEVED KNOWLEDGE FROM MERCK MANUALS:\n{retrieved_context}"
     
     except Exception as e:
-        return f"RAG SEARCH ERROR: Could not retrieve knowledge. Error: {e}"
+        return f"RAG SEARCH ERROR: Could not retrieve general health knowledge. Error: {e}"
 
 
 # --- Test Execution ---
